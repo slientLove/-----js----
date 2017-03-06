@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>模仿juery</title>
+	<style type="text/css">
+		div{ width: 100px;height: 100px;background: red; filter:alpha(opacity:30);opacity: 0.3;}
+	</style>
+	 <script src="v.js"></script>
+	 <script src="v-animate.js"></script>
+	<script>
+		$(function(){
+			$('#btn').toggle(function(){
+				$('#div1').animate({"width":"600","height":"200","opacity":"100"});
+			},function(){
+				$('#div1').animate({"width":"100","height":"100","opacity":"30"});
+			});
+		});
+	</script>
+</head>
+<body>
+	<div id="div1"></div>
+	<input type="button" id="btn">
+	
+</body>
+</html>

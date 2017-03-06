@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>模仿juery</title>
+	<style type="text/css">
+		#div1{ width: 100px;height: 100px;background: red;position: relative;}
+		#div2{ width: 100px;height: 100px;background: yellow;position: absolute;left: 105px;top: 105px;}
+	</style>
+	 <script src="v.js"></script>
+	<script>
+		// $(function(){					//现在是模仿jQuery库。基本语法
+		// 	$("#btn1").click(function(){			
+		// 		alert('1');
+		// 	});
+		// });
+
+		// $(function(){
+		// 	$('#div1').hover(function(){
+		// 		this.style.background = 'green';
+		// 		this.style.opacity = 0.6;
+		// 	},function(){
+		// 		this.style.background = 'red';
+		// 	 	this.style.opacity = 1;
+		// 	});
+		// });
+		$(function(){
+			$('#div1').click(function(){
+				alert($('#div1').css('opacity'));
+			})
+		});
+		// $(function(){
+		// 	$('#div2').click(function(){
+		// 		$('#div2').css('background');
+		// 	});
+		// })
+		// $('#btn1').toggle(function(){
+		// 	alert('a');
+		// },function(){
+		// 	alert('b');
+		// });
+							  
+		$(function(){						//此处相当于window.onload
+			$('#btn1').toggle(function(){
+				alert('a');
+			},function(){
+				$('#btn1').css('opacity','0.6');
+			},function(){
+				$('#btn1').css('background','red');
+			});
+		});
+	</script>
+</head>
+<body>
+	<input type="button"  value="按钮" id="btn1">
+	<div id="div1"></div>
+	<div id="div2"></div>
+</body>
+</html>

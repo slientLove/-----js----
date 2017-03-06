@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<style type="text/css">
+		#div1{ text-align: center;margin: 20px auto; }
+		#clock{ border: 1px solid black; }
+	</style>
+	<script type="text/javascript">
+		window.onload = function(){
+			var dom = document.getElementById('clock');
+			var ctx = dom.getContext('2d');
+			var width = ctx.canvas.width;
+			var height = ctx.canvas.height;
+			var r = width/2;
+			var rem = width/200;		//设置当图形改变大小时，所形成的比例
+			function setBackgroud(){
+				ctx.save();
+				ctx.translate(r,r);		//转换圆的坐标中心
+				ctx.beginPath();		//开始画路径
+				ctx.lineWidth = 10*rem;		//设置圆的边框值
+				ctx.arc(0,0,r-ctx.lineWidth/2,2*Math.PI,false);	//由于圆的边框宽度变化了，所以画圆的轨迹时，半径也要调整
+				ctx.stroke();
+
+				//画小时数
+				//由于轨迹从3开始记，所以从3开始
+				var hoursNumber = [3,4,5,6,7,8,9,10,11,12,1,2];
+				ctx.font = "18px Arial";
+				ctx.textAlign = "center";
+				ctx.textBaseline = "middle";
+				hoursNumber.forEach(function(num,i){
+					var rad = 2*Math.PI/12*i;
+					var x = Math.cos(rad)*(r-20*rem);	//计算每个数字的坐标值
+					var y = Math.sin(rad)*(r-20*rem);
+					ctx.fillText(num,x,y);		//将数字填充进圆的文本中
+				});
+
+				//画内部的分钟数
+				for(var i =0;i<60;i++){
+					var rad = 2*Math.PI/60*i;
+					var x = Math.cos(rad)*(r-17*rem);
+					var y = Math.sin(rad)*(r-17*rem);
+					ctx.beginPath();		//当再次开始画图像时，又重新设置画布
+					if(i%5==0){
+						ctx.fillStyle = "#000";
+						ctx.arc(x,y,2*rem,0,2*Math.PI,false);
+					}else{
+						ctx.fillStyle = "#ccc";
+						ctx.arc(x,y,2*rem,0,2*Math.PI,false);
+					}
+					ctx.fill();
+				}
+			}
+			function setHours(hour,minute){		//现在开始画时针
+				ctx.save();				//在开始画之前，将当前的画布环境保存起来
+				ctx.beginPath();
+				var rad = 2*Math.PI/12*hour;
+				var Min = 2*Math.PI/12/60*minute;	//传入因为分钟引起的转过的角度（每小时有60分钟，乘以分钟数就可以算出角度）
+				//计算时针应该转过的角度，一圈12小时
+				
+				//画出轨迹	
+				ctx.rotate(rad+Min);		//进行旋转
+				ctx.lineWidth = 6*rem;		//设置线条宽度
+				ctx.lineCap = "round";	//设置线条的圆角
+				ctx.moveTo(0,10*rem);		//设置画线条的起始位置
+				ctx.lineTo(0,-r/2);			//时针不必添加比例	
+				ctx.stroke();			//进行线条填充
+				ctx.restore();			//画完之后将画布环境还原
+			}
+			function Minutes(minute){
+				ctx.save();				//在开始画之前，将当前的画布环境保存起来
+				ctx.beginPath();
+				var rad = 2*Math.PI/60*minute;
+				//计算分针应该转过的角度，一圈60分钟
+				
+				//画出轨迹	
+				ctx.rotate(rad);		//进行旋转
+				ctx.lineWidth = 3*rem;		//设置线条宽度
+				ctx.lineCap = "round";	//设置线条的圆角
+				ctx.moveTo(0,10*rem);		//设置画线条的起始位置
+				ctx.lineTo(0,-r+35*rem);		
+				ctx.stroke();			//进行线条填充
+				ctx.restore();
+			}
+			function Seconds(second){
+				ctx.save();				//在开始画之前，将当前的画布环境保存起来
+				ctx.beginPath();
+				var rad = 2*Math.PI/60*second;
+				//计算秒针应该转过的角度，一圈60秒
+				
+				//画出轨迹	
+				ctx.rotate(rad);		//进行旋转
+				ctx.fillStyle = "red";		
+				ctx.moveTo(-2*rem,20*rem);		//设置秒针样式，尾部比较大，头部比较小
+				ctx.lineTo(2*rem,20*rem);
+				ctx.lineTo(1,-r+18*rem);
+				ctx.lineTo(-1,-r+18*rem);		
+				ctx.fill();			//进行线条填充
+				ctx.restore();
+			}
+			function drawDot(){			//在中心加上一个点，形成螺丝
+				ctx.beginPath();
+				ctx.fillStyle = "#fff";
+				ctx.arc(0,0,3*rem,0,2*Math.PI,false);
+				ctx.fill();
+			}
+	//动态的转起来
+			function draw(){
+				ctx.clearRect(0,0,width,height);	//相当于每秒清除canvas，然后下面又重新画上canvas
+				var now = new Date();
+				var hour = now.getHours();
+				var Minute = now.getMinutes();
+				var Second = now.getSeconds();
+				setBackgroud();		//调用一次原点还原
+				setHours(hour,Minute);				//调用函数
+				Minutes(Minute);
+				Seconds(Second);
+				drawDot();
+				ctx.restore();		//恢复到原始值
+			}
+			//每秒执行一次定时器
+			setInterval(draw,1000);
+		};
+	</script>
+</head>
+<body>
+	<div id="div1">
+		<canvas id="clock" width="600px" height="600px" ></canvas>
+	</div>
+</body>
+</html>

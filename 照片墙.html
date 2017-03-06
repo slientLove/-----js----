@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>照片墙</title>
+	<style type="text/css">
+		body{ margin: 0;padding: 0; }
+		#div1{ width: 660px;margin: 10px auto;position: relative; }
+		#div1 ul{ width: 660px;list-style-type: none;position: relative; }
+		#div1 ul li{ float: left; margin: 10px;}
+		ul .active{ border: 1px dashed red; }
+	</style>
+	<script src="v.js"></script>
+	<script src="v-animate.js"></script>
+	<script type="text/javascript">
+		window.onload = function(){
+			var aLi = document.getElementsByTagName('li');
+			var arr = [];
+			var i=0;
+			var iNowIndex=2;
+			//布局转换，将每个img的坐标位置存储起来
+			for(i=0;i<aLi.length;i++){
+				arr[i]={"left":aLi[i].offsetLeft,"top":aLi[i].offsetTop};
+			}
+
+			//将图片转为绝对定位
+			for(i=0;i<aLi.length;i++){
+				aLi[i].style.position="absolute";
+				aLi[i].style.left = arr[i].left+'px';
+				aLi[i].style.top = arr[i].top+'px';
+				aLi[i].style.margin=0;
+				aLi[i].index = i;				//给图片加上索引值
+			}
+
+			//在每一个li上加上拖拽事件
+			for(i=0;i<aLi.length;i++){
+				setDrag(aLi[i]);
+			}
+
+			//计算两个图片之间的距离
+			function getDis(obj1,obj2){
+		//计算两张图片中心点间的距离
+				var a = obj1.offsetLeft - obj2.offsetLeft;
+				var b = obj1.offsetTop-obj2.offsetTop;
+				return Math.sqrt(Math.pow(a,2)+Math.pow(b,2));	//a,b的2次幂
+			}
+
+
+			//找到离拖拽物体最近的哪个图片
+			function findNeast(obj){
+				var iMin = 999999;
+				var iMinIndex=-1;
+		//一种数组的排序方法，一次与设定的值进行比较，直到找到最小的
+				for(i=0;i<aLi.length;i++){
+					if(aLi[i]==obj) continue;
+					if(cdText(obj,aLi[i])){
+						var dis = getDis(obj,aLi[i]);
+						if(dis<iMin){
+							iMin = dis;
+							iMinIndex = i;
+						}
+					}
+				}
+				if(iMinIndex==-1){
+					return false;
+				}else{
+					return aLi[iMinIndex];		//如果找到，则将那个图片作为函数值返回出去
+				}
+			}
+
+
+			//拖拽函数
+			function setDrag(obj){
+				obj.onmousedown = function(ev){
+					var oEvent = ev||event;
+					obj.style.zIndex = iNowIndex++;		//鼠标按下时，层级变大
+					var disX = oEvent.clientX-obj.offsetLeft;
+					var disY = oEvent.clientY-obj.offsetTop;
+					document.onmousemove = function(ev){
+						var oEvent = ev||event;
+						for(i=0;i<aLi.length;i++){
+							aLi[i].className='';	//每次循环时先清空样式
+						}
+		//获取函数的返回值，判断并接收距离最近的那个图片
+						var oNear = findNeast(obj);
+						if(oNear){
+							oNear.className='active';
+						}
+						
+						obj.style.left = oEvent.clientX - disX+'px';
+						obj.style.top = oEvent.clientY - disY+'px';
+
+					}
+					document.onmouseup = function(){
+		//鼠标抬起时，手动清除两个方法
+						document.onmousemove=null;
+						document.onmouseup=null;
+						var oNear = findNeast(obj);
+						if(oNear){
+							var temp;
+							oNear.className = '';
+		//检测到碰撞后，就交换两个图片的位置
+							$(obj).animate(arr[oNear.index]);
+							$(oNear).animate(arr[obj.index]);
+		//并将图片的层级变大一些，使其从上面交换
+							oNear.style.zIndex = iNowIndex++;
+							obj.style.zIndex = iNowIndex++;
+		//交换图片的同时，也必须将图片的的索引值进行交换，否则就没实现真正交换
+							temp = obj.index;
+							obj.index = oNear.index;
+							oNear.index = temp;
+						}else{
+		//如果图片没有和任何图片碰撞，则使其恢复到原始位置
+							$(obj).animate(arr[obj.index]);   //封装的vQuery方法
+							clearInterval(timer);      
+		//避免定时器的影响，初始清除一下
+						}
+					}
+					return false;		//由于浏览器本身的差异，会出现鼠标抬起不会停下的问题，在这里返回false就行了(阻止默认事件)
+				}
+			}
+
+			//碰撞检测
+			function cdText(obj1,obj2){
+				var l1 = obj1.offsetLeft;	//获取左边线的距离
+				var r1 = obj1.offsetLeft+obj1.offsetWidth; //获取右边线的距离
+				var t1 = obj1.offsetTop;	//获取上边线的距离
+				var b1 = obj1.offsetTop+obj1.offsetHeight;	//获取右边线的距离
+
+				var l2 = obj2.offsetLeft;
+				var r2 = obj2.offsetLeft+obj2.offsetWidth;
+				var t2 = obj2.offsetTop;
+				var b2 = obj2.offsetTop+obj2.offsetHeight;
+		//不会发生碰撞时，一共有四种情况,1的右边在2的左边，1的下边在2的上边...,四种情况		
+				if(l1>r2||r1<l2||b2<t1||b1<t2){
+					return false;
+				}else{
+					return true;
+				}
+			}
+		}
+	</script>
+</head>
+<body>
+	<div id="div1">
+		<ul>
+			<li><img src="img1/高架桥.jpg"></li>
+			<li><img src="img1/金山.jpg"></li>
+			<li><img src="img1/金山1.jpg"></li>
+			<li><img src="img1/高楼.jpg"></li>
+			<li><img src="img1/高塔.jpg"></li>
+			<li><img src="img1/陆家嘴.jpg"></li>
+			<li><img src="img1/天空.jpg"></li>
+			<li><img src="img1/西津古渡.jpg"></li>
+			<li><img src="img1/高架桥.jpg"></li>
+		</ul>
+	</div>
+</body>
+</html>

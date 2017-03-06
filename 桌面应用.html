@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>桌面应用</title>
+	<script>
+		window.onload = function(){
+			var oImg = new Image();			//Image对象，类似于img元素标签.可以实现预加载
+			oImg.onload = function(){
+				alert('图片加载完成');
+			}
+			oImg.onerror = function(){
+				alert('失败');
+			}
+
+			//在页面加载完成时，立即加载要显示的图片
+			oImg.src = "https://ps.ssl.qhimg.com/sdmt/176_135_100/t010f3ecb5a5c80136c.jpg";
+		}
+	</script>
+</head>
+<body>
+		<!-- onload为图片加载完成时实现，onerror为发生错误时实现 -->
+	<img src="https://ps.ssl.qhimg.com/sdmt/187_135_100/t014d3503dd2d67d728.jpg"  onmouseover="this.src='https://ps.ssl.qhimg.com/sdmt/176_135_100/t010f3ecb5a5c80136c.jpg'" onmouseout="this.src='https://ps.ssl.qhimg.com/sdmt/187_135_100/t014d3503dd2d67d728.jpg'">
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<style type="text/css">
+		#div1{ width: 800px;height: 20px;background: #ccc;margin: 10px auto;position: relative;}
+		#div2{ width: 20px;height: 20px; background: red;position: absolute;}
+	</style>
+	<script type="text/javascript">
+		window.onload = function(){
+			var oParent = document.getElementById('div1');
+			var oDiv = document.getElementById('div2');
+			oDiv.onmousedown = function(ev){
+				var oEvent = ev||event;
+				var disX = oEvent.clientX - oDiv.offsetLeft;
+				document.onmousemove = function(ev){
+					var oEvent = ev||event;
+					var dis = oEvent.clientX-disX;
+					if(dis<0){
+						dis = 0;
+					}else if(dis>oParent.offsetWidth - oDiv.offsetWidth){
+						dis = oParent.offsetWidth - oDiv.offsetWidth;
+					}
+					oDiv.style.left = dis+'px';
+				}
+			}
+			oDiv.onmouseup = function(){
+				document.onmousemove=null;
+			}
+		}
+	</script>
+</head>
+<body>
+	<div id="div1">
+		<div id="div2"></div>
+	</div>
+</body>
+</html>

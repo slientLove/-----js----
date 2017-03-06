@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>苹果网站图标效果</title>
+	<style type="text/css">
+		body{ margin: 0;padding: 0; }
+		#div1{ width: 100%;position: absolute;bottom: 0;text-align: center; }
+		img{ width: 64px;height: 64px;}
+	</style>
+	<script type="text/javascript">
+	window.onload = function(){
+		document.onmousemove = function(ev){
+			var oEvent = ev||event;			//获取鼠标移动事件
+			var aImg = document.getElementsByTagName('img');
+			var oDiv = document.getElementById('div1');
+			for(var i =0;i<aImg.length;i++){
+
+				var disX = aImg[i].offsetLeft+aImg[i].offsetWidth/2;
+				var disY = aImg[i].offsetTop+oDiv.offsetTop+aImg[i].offsetHeight/2;
+				var a = disX-oEvent.clientX;
+				var b = disY-oEvent.clientY;
+
+				//var dis = Math.sqrt(Math.pow(a,2)+Math.pow(b,2));
+				var dis = Math.sqrt(a*a+b*b);
+				var scale = 1-dis/300;
+				if(scale<0.5){
+					scale=0.5;
+				}
+				aImg[i].style.width = scale*128+'px';	//此处一定要加单位
+				aImg[i].style.height = scale*128+'px';
+
+				//offsetWidth和offsetTop获取的是相对于父级的偏移量
+			/*
+               图片大小是图片中心位置和鼠标的位置而改变的，由于相对于父级，所以图片offsetTop的值为0，所以要获取div父级的高度偏移量，加上自己的就行了,然后根据勾股定理计算出图片中心点和鼠标位置连线的长度
+			 *
+			 *
+			 *由于要使鼠标移上去时，中间变大，两边相对变小，所以除以一个数值形成鼠标移动灵敏度，然后再用1减去它，就可以实现中间大，两边小了.
+			 *
+			 *
+			 *判断一下，如果样式非常小就使其变为一倍大，即是原始的大小，否则就根据数值变化，最多两倍大
+			 *
+			 *
+			 *
+			*/
+
+			} 
+		}
+	}
+		
+	</script>
+</head>
+<body>
+	<div id="div1">
+		<img src="img1/rainbow.png">
+		<img src="img1/show-flakes.png">
+		<img src="img1/shtorm.png">
+		<img src="img1/umbrella.png">
+		<img src="img1/very-cloudy.png">
+		<img src="img1/tornado.png">
+	</div>
+</body>
+</html>

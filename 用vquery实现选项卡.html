@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<style type="text/css">
+		*{margin: 0;padding: 0;}
+		#box{ width: 508px;height: 300px;border: 1px solid black;margin: 20px auto; overflow: hidden;}
+		#tab{ list-style-type: none; }
+		#tab li{ width: 125px;height: 30px;border: 1px solid black;float: left; }
+		#box .text{ width: 508px;height: 300px;border: 1px solid red; }
+		#tab .link{ background: #ccc; }
+		#tab .hover{ background: orange; }
+	</style>
+	<script src="v.js"></script>
+	<script>
+		$(function(){
+			var oLi = $('ul').find('li');
+			var oDiv = $('#box').find('div');
+			oLi.hover(function(){
+				oLi.attr('className','link');
+				$(this).attr('className','hover');
+				oDiv.hide();
+				oDiv.eq($(this).index()).show();
+			}); 
+		})
+					
+	</script>
+</head>
+<body>
+	<div id="box">
+		<ul id="tab">
+			<li>Javascript</li>
+			<li>Java</li>
+			<li>数据库设计</li>
+			<li>系统分析与设计</li>
+		</ul>
+		<div class="text">
+			<p>Javascript</p>
+			<p>Javascript</p>
+			<p>Javascript</p>
+			<p>Javascript</p>
+		</div>
+		<div class="text">
+			<p>Java</p>
+			<p>Java</p>
+			<p>Java</p>
+			<p>Java</p>
+		</div>
+		<div class="text">
+			<p>数据库设计</p>
+			<p>数据库设计</p>
+			<p>数据库设计</p>
+			<p>数据库设计</p>
+		</div>
+		<div class="text">
+			<p>系统分析与设计</p>
+			<p>系统分析与设计</p>
+			<p>系统分析与设计</p>
+			<p>系统分析与设计</p>
+		</div>
+	</div>
+</body>
+</html>

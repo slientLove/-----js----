@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<style type="text/css">
+		*{margin: 0;padding: 0;}
+		#box{ width: 400px;height: 300px;border: 1px solid red;margin: 30px auto;position: relative; overflow: hidden;}
+		#box ul{list-style-type: none;width: 400px;height: 300px;position: absolute;top: 0;left: 0;}
+		#box ol{ position: absolute; right: 10px;bottom: 10px;z-index: 1;list-style-type: none;}
+		#box ol li{ float: left;width: 20px;height: 20px;margin: 2px;text-align: center;background: #ccc;}
+		#box .active{ background: orange; }
+		#box .link{background: #ccf;}
+	</style>
+	<script src="v.js"></script>
+	<script src="v-animate.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			$().extend('size',function(){
+				return this.elements.length;
+			});
+			var aLi = $('#box').find('ol').find('li');
+			var oUl = $('#box').find('ul');
+			var oli = oUl.find('li');
+			var iNow = 0;
+			var timer = null;			//设置定时器进行自动播放
+			aLi.hover(function(){
+				iNow = $(this).index();
+				tab();
+			});
+
+			function timerInner(){
+				iNow++;
+				if(iNow==aLi.size()){		//判断iNow是否到终点
+					iNow=0;
+				}
+				tab();
+			}
+			timer = setInterval(timerInner, 2000);
+			function tab(){
+				aLi.attr('className','link');
+				aLi.eq(iNow).attr('className','active');
+				oUl.animate({top:-300*iNow});
+			}
+			$('#box').hover(function(){		//鼠标移入暂停，移出开始运动
+				clearInterval(timer);
+			},function(){
+				timer = setInterval(timerInner, 2000);
+			});
+		})
+	</script>
+</head>
+<body>
+	<div id="box">
+		<ol>
+			<li class="active">1</li>
+			<li>2</li>
+			<li>3</li>
+			<li>4</li>
+		</ol>
+		<ul>
+			<li><a href="#"><img src="img/cry.jpg" alt="图片一"></a></li>
+			<li><a href="#"><img src="img/beautiful.jpg" alt="图片二"></a></li>
+			<li><a href="#"><img src="img/bus.jpg" alt="图片三"></a></li>
+			<li><a href="#"><img src="img/dusk.jpg" alt="图片四"></a></li>
+		</ul>
+	</div>
+</body>
+</html>

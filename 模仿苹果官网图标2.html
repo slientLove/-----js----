@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>苹果网站图标效果</title>
+	<style type="text/css">
+		body{ margin: 0;padding: 0; }
+		#div1{ width: 100%;position: absolute;bottom: 0;text-align: center; }
+		img{ width: 64px;height: 64px;}
+	</style>
+	<script type="text/javascript">
+	window.onload = function(){
+		 document.onmousemove = function(ev){
+			var oEvent = ev||event;
+			var aImg = document.getElementsByTagName('img');
+			var oDiv = document.getElementById('div1');
+			for(var i =0;i<aImg.length;i++){
+				var disX = aImg[i].offsetLeft+aImg[i].offsetWidth/2;
+				var disY = aImg[i].offsetTop+oDiv.offsetTop+aImg[i].offsetHeight/2;
+				var a = disX-oEvent.clientX;
+				var b = disY-oEvent.clientY;
+				
+				//var dis = Math.sqrt(Math.pow(a,2)+Math.pow(b,2));
+				var dis = Math.sqrt(a*a+b*b);
+				var scale = 1-dis/300;
+				if(scale<0.5){
+					scale=0.5;
+				}
+				aImg[i].style.width=scale*128+'px';
+				aImg[i].style.height=scale*128+'px';
+			} 
+		}
+	 }
+		
+	</script>
+</head>
+<body>
+	<div id="div1">
+		<img src="img/bus1.jpg" style="width: 64px;height: 64px;">
+		<img src="img/bus1.jpg">
+		<img src="img/bus1.jpg">
+		<img src="img/bus1.jpg">
+		<img src="img/bus1.jpg">
+		<img src="img/bus1.jpg">
+	</div>
+</body>
+</html>
